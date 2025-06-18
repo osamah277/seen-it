@@ -2,39 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seen It</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Seen It - Movie/TV Tracker</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 </head>
 <body>
-  <header>
-    <h1>🎬 Seen It</h1>
-    <button id="mode-toggle">🌙</button>
-    <button id="sign-in">Sign In with Google</button>
-    <button id="sign-out" style="display: none;">Sign Out</button>
-  </header>
-  <main>
-    <section id="add-movie">
-      <input type="text" id="movie-title" placeholder="Add a movie or TV show" />
-      <button id="add-button">Add</button>
-    </section>
+  <button id="mode-toggle" type="button" aria-label="Toggle Dark Mode">🌙 Dark Mode</button>
 
-    <section class="list-section">
-      <h2>Watchlist</h2>
-      <ul id="watchlist"></ul>
-    </section>
+  <div id="loading">Checking authentication status...</div>
 
-    <section class="list-section">
-      <h2>Watched</h2>
-      <ul id="watchedlist"></ul>
-    </section>
-  </main>
+  <!-- Auth Container -->
+  <div id="auth-container">
+    <h2>Please sign in or register</h2>
+    <input type="email" id="email" placeholder="Email" /><br />
+    <input type="password" id="password" placeholder="Password" /><br />
+    <div class="button-group">
+      <button id="sign-in-btn" type="button">Sign In</button>
+      <button id="register-btn" type="button">Register</button>
+      <button id="google-signin-btn" type="button" aria-label="Sign in with Google" title="Sign in with Google" class="google-btn">
+      <!-- Google logo -->
+        <svg width="18" height="18" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#4285F4" d="M533.5 278.4c0-17.4-1.4-34.1-4.1-50.3H272.1v95.3h146.9c-6.4 34.4-26.1 63.6-55.7 83v68h89.8c52.6-48.5 82.4-119.7 82.4-195z"/>
+          <path fill="#34A853" d="M272.1 544.3c74 0 136-24.5 181.3-66.4l-89.8-68c-24.9 16.7-57 26.5-91.5 26.5-70.4 0-130.2-47.5-151.7-111.3H28.4v69.9c45.5 90.3 139 149.3 243.7 149.3z"/>
+          <path fill="#FBBC05" d="M120.4 322.9c-10.8-32.3-10.8-67.3 0-99.6v-69.9H28.4c-39.8 79.5-39.8 174.2 0 253.7l92-84.2z"/>
+          <path fill="#EA4335" d="M272.1 107.7c39.7-.6 77.8 14 106.7 40.4l79.8-79.8C407.7 24.1 345.7 0 272.1 0 167.4 0 74 58.9 28.4 149.3l92 69.9c21.4-63.7 81.2-111.5 151.7-111.5z"/>
+        </svg>
+      </button>
+    </div>
+    <p id="error-msg"></p>
+  </div>
 
-  <script src="firebase.js"></script>
+  <!-- App Container -->
+  <div id="app">
+    <h2>Welcome, <span id="user-name"></span>!</h2>
+    <button id="sign-out-btn" type="button">Sign Out</button>
+
+    <!-- Only for Admin -->
+    <div id="admin-controls" style="display: none;">
+      <h3>Add Movie/TV Show</h3>
+      <input type="text" id="movie-title" placeholder="Title" />
+      <select id="movie-type">
+        <option value="movie">Movie</option>
+        <option value="tv">TV Show</option>
+      </select>
+      <button id="add-movie-btn" type="button">Add</button>
+      <p id="movie-error-msg"></p>
+    </div>
+
+    <h3>Your List</h3>
+    <ul id="movies-list"></ul>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <!-- App Logic -->
   <script src="app.js"></script>
 </body>
 </html>

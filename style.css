@@ -1,56 +1,274 @@
+/* Reset some defaults */
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #f5f5f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f2f5;
   color: #333;
-  padding: 1rem;
-  transition: 0.3s;
-}
-
-.dark-mode {
-  background: #121212;
-  color: #eee;
-}
-
-header {
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#auth-container, #app {
+  background: white;
+  padding: 30px 40px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  width: 500px; /* updated size */
+  max-width: 95vw;
+}
+
+
+h2, h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #222;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"],
+select {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 10px 0 20px;
+  border: 1.8px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus,
+select:focus {
+  border-color: #0052cc;
+  outline: none;
 }
 
 button {
-  margin-left: 0.5rem;
-  padding: 0.4rem 1rem;
+  background-color: #0052cc;
+  border: none;
+  padding: 12px 20px;
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 6px;
   cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
 }
 
-input {
-  padding: 0.5rem;
-  width: 60%;
+button:hover {
+  background-color: #003d99;
 }
 
-.list-section {
-  margin-top: 2rem;
+button:disabled {
+  background-color: #a3a3a3;
+  cursor: not-allowed;
 }
 
-ul {
-  list-style: none;
+#error-msg,
+#movie-error-msg {
+  color: #d93025;
+  min-height: 18px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+#movies-list {
+  list-style-type: none;
   padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  border-top: 1px solid #eee;
+  margin-top: 20px;
 }
 
-li {
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  background: #e2e2e2;
-  border-radius: 4px;
+#movies-list li {
+  padding: 10px 8px;
+  border-bottom: 1px solid #eee;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  color: #222;
 }
 
-.dark-mode li {
+.movie-buttons button {
+  background-color: #e0e0e0;
+  color: #555;
+  padding: 6px 10px;
+  margin-left: 5px;
+  font-size: 13px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.movie-buttons button:hover {
+  background-color: #bbb;
+}
+
+#admin-controls {
+  margin-top: 25px;
+}
+
+#admin-controls input,
+#admin-controls select {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 400px) {
+  body {
+    padding: 10px;
+  }
+  #auth-container, #app {
+    width: 100%;
+    padding: 20px;
+  }
+}
+
+/* Dark mode styles */
+body.dark-mode {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-mode #auth-container,
+body.dark-mode #app {
+  background: #1e1e1e;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+}
+
+body.dark-mode input,
+body.dark-mode select {
   background: #333;
+  border-color: #555;
+  color: #ddd;
 }
 
-li button {
-  margin-left: 1rem;
+body.dark-mode input::placeholder {
+  color: #bbb;
+}
+
+body.dark-mode button {
+  background-color: #3399ff;
+  color: #eee;
+}
+
+body.dark-mode button:hover {
+  background-color: #2a80d1;
+}
+
+body.dark-mode .movie-buttons button {
+  background-color: #555;
+  color: #eee;
+}
+
+body.dark-mode .movie-buttons button:hover {
+  background-color: #777;
+}
+
+/* Mode toggle button */
+#mode-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #0052cc;
+  color: white;
+  font-weight: 600;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+}
+
+#mode-toggle:hover {
+  background-color: #003d99;
+}
+
+body.dark-mode #mode-toggle {
+  background-color: #222;
+  color: #eee;
+}
+
+/* Dark mode text color fixes */
+
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode p,
+body.dark-mode label,
+body.dark-mode li,
+body.dark-mode span,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode button {
+  color: #e0e0e0 !important;
+}
+
+/* Inputs and selects dark background + text */
+body.dark-mode input,
+body.dark-mode select {
+  background-color: #222 !important;
+  color: #eee !important;
+  border-color: #555 !important;
+}
+
+/* Buttons background and text */
+body.dark-mode button {
+  background-color: #3399ff !important;
+  color: #eee !important;
+}
+
+/* Buttons hover state */
+body.dark-mode button:hover {
+  background-color: #2a80d1 !important;
+}
+
+.google-btn {
+  background: white;
+  border: 1.5px solid #ccc;
+  border-radius: 4px;
+  width: 38px;
+  height: 38px;
+  padding: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.google-btn:hover {
+  background-color: #eee;
+  border-color: #999;
+}
+
+.google-btn svg {
+  display: block;
+}
+
+.button-group {
+  display: flex;
+  gap: 6px; /* smaller gap */
+  justify-content: flex-start; /* align to the left */
+  flex-wrap: wrap; /* allows wrapping on smaller screens */
+  align-items: center;
+  margin-top: 15px;
 }
