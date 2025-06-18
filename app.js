@@ -62,7 +62,7 @@ function showApp(user) {
   movieErrorMsg.textContent = '';
   movieTitleInput.value = '';
   movieTypeSelect.value = 'movie';
-  addMovieSection.style.display = (user.email === 'osamah@gmail.com') ? 'block' : 'none';
+  addMovieSection.style.display = (user.email === 'osamah.lutf@gmail.com') ? 'block' : 'none';
   loadMovies();
 }
 
@@ -193,7 +193,7 @@ function loadMovies() {
           li.appendChild(btnContainer);
 
           // Admin edit/delete buttons
-          if (currentUser.email === 'osamah@gmail.com') {
+          if (currentUser.email === 'osamah.lutf@gmail.com') {
             const editBtn = document.createElement('button');
             editBtn.textContent = 'Edit';
             editBtn.onclick = () => editMovie(doc.id, data.title, data.type);
