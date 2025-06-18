@@ -213,10 +213,12 @@ body.dark-mode {
 body.dark-mode h2,
 body.dark-mode h3,
 body.dark-mode p,
-body.dark-mode label,
-body.dark-mode li {
+body.dark-mode label {
   color: #e0e0e0;
-  border-bottom: 1px solid #444;
+  border-bottom: 1px solid #444; /* keep for headings */
+}
+body.dark-mode li {
+  border-bottom: none !important;
 }
 body.dark-mode span,
 body.dark-mode input,
@@ -301,4 +303,28 @@ body.dark-mode button:hover {
   margin-top: 30px;
   border-bottom: 1px solid #ccc;
   padding-bottom: 5px;
+}
+
+#movies-list li,
+#watchlist li,
+#watched li {
+  color: #222;
+}
+
+body.dark-mode #movies-list li,
+body.dark-mode #watchlist li,
+body.dark-mode #watched li {
+  color: #e0e0e0; /* light color for visibility */
+}
+
+/* Footer */
+footer {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 13px;
+  color: #444343;
+}
+
+body.dark-mode footer {
+  color: #444343;
 }
