@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seen It</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+</head>
+<body>
+  <header>
+    <h1>🎬 Seen It</h1>
+    <button id="mode-toggle">🌙</button>
+    <button id="sign-in">Sign In with Google</button>
+    <button id="sign-out" style="display: none;">Sign Out</button>
+  </header>
+  <main>
+    <section id="add-movie">
+      <input type="text" id="movie-title" placeholder="Add a movie or TV show" />
+      <button id="add-button">Add</button>
+    </section>
+
+    <section class="list-section">
+      <h2>Watchlist</h2>
+      <ul id="watchlist"></ul>
+    </section>
+
+    <section class="list-section">
+      <h2>Watched</h2>
+      <ul id="watchedlist"></ul>
+    </section>
+  </main>
+
+  <script src="firebase.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

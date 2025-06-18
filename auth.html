@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seen It – Sign In</title>
+  <link rel="stylesheet" href="auth.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <div class="auth-container">
+    <h1>Seen It</h1>
+
+    <div id="auth-forms">
+      <input type="email" id="email" placeholder="Email" />
+      <input type="password" id="password" placeholder="Password" />
+
+      <button id="sign-in-btn">Sign In</button>
+      <button id="register-btn">Register</button>
+      <hr style="margin: 20px 0; border-color: #444;" />
+      <button id="google-signin-btn" class="google-btn">Sign in with Google</button>
+      <p class="error-message" id="error-msg"></p>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>
