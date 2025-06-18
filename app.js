@@ -35,6 +35,8 @@ const moviesList = document.getElementById('movies-list');
 const addMovieSection = document.getElementById('admin-controls');
 
 const modeToggleBtn = document.getElementById('mode-toggle');
+const watchlistUl = document.getElementById('watchlist');
+const watchedUl = document.getElementById('watched');
 
 let currentUser = null;
 
@@ -131,48 +133,120 @@ signOutBtn.addEventListener('click', () => {
 });
 
 function loadMovies() {
+  if (!currentUser) return;
+
+  // Clear all lists
   moviesList.innerHTML = '';
+  watchlistUl.innerHTML = '';
+  watchedUl.innerHTML = '';
 
-  db.collection('movies')
-    .orderBy('addedAt', 'desc')
-    .get()
-    .then(snapshot => {
-      if (snapshot.empty) {
-        moviesList.innerHTML = '<li>No movies or TV shows added yet.</li>';
-        return;
-      }
+  // Load user-specific watchlist and watched
+  Promise.all([
+    db.collection('users').doc(currentUser.uid).collection('watchlist').get(),
+    db.collection('users').doc(currentUser.uid).collection('watched').get()
+  ])
+  .then(([watchlistSnap, watchedSnap]) => {
+    const watchlistIds = watchlistSnap.docs.map(doc => doc.id);
+    const watchedIds = watchedSnap.docs.map(doc => doc.id);
 
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const li = document.createElement('li');
-        li.textContent = `${data.title} (${data.type})`;
+    // Show Watchlist
+    watchlistSnap.forEach(doc => {
+      const data = doc.data();
+      const li = document.createElement('li');
+      li.textContent = `${data.title} (${data.type})`;
+      addWatchButtons(li, doc.id, 'watchlist');
+      watchlistUl.appendChild(li);
+    });
 
-        if (currentUser?.email === 'osamah@gmail.com') {
+    // Show Watched
+    watchedSnap.forEach(doc => {
+      const data = doc.data();
+      const li = document.createElement('li');
+      li.textContent = `${data.title} (${data.type})`;
+      addWatchButtons(li, doc.id, 'watched');
+      watchedUl.appendChild(li);
+    });
+
+    // Load All Movies (excluding watchlist and watched)
+    db.collection('movies').orderBy('addedAt', 'desc').get()
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          if (watchlistIds.includes(doc.id) || watchedIds.includes(doc.id)) return;
+
+          const data = doc.data();
+          const li = document.createElement('li');
+          li.textContent = `${data.title} (${data.type})`;
+
           const btnContainer = document.createElement('span');
           btnContainer.className = 'movie-buttons';
 
-          const editBtn = document.createElement('button');
-          editBtn.type = 'button';
-          editBtn.textContent = 'Edit';
-          editBtn.onclick = () => editMovie(doc.id, data.title, data.type);
+          const watchlistBtn = document.createElement('button');
+          watchlistBtn.textContent = '➕ Watchlist';
+          watchlistBtn.onclick = () => addToList('watchlist', doc.id, data);
 
-          const deleteBtn = document.createElement('button');
-          deleteBtn.type = 'button';
-          deleteBtn.textContent = 'Delete';
-          deleteBtn.onclick = () => deleteMovie(doc.id);
+          const watchedBtn = document.createElement('button');
+          watchedBtn.textContent = '✅ Watched';
+          watchedBtn.onclick = () => addToList('watched', doc.id, data);
 
-          btnContainer.appendChild(editBtn);
-          btnContainer.appendChild(deleteBtn);
+          btnContainer.appendChild(watchlistBtn);
+          btnContainer.appendChild(watchedBtn);
           li.appendChild(btnContainer);
-        }
 
-        moviesList.appendChild(li);
+          // Admin edit/delete buttons
+          if (currentUser.email === 'osamah@gmail.com') {
+            const editBtn = document.createElement('button');
+            editBtn.textContent = 'Edit';
+            editBtn.onclick = () => editMovie(doc.id, data.title, data.type);
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.onclick = () => deleteMovie(doc.id);
+
+            btnContainer.appendChild(editBtn);
+            btnContainer.appendChild(deleteBtn);
+          }
+
+          moviesList.appendChild(li);
+        });
       });
-    })
-    .catch(error => {
-      movieErrorMsg.textContent = 'Failed to load movies: ' + error.message;
-    });
+  })
+  .catch(error => {
+    movieErrorMsg.textContent = 'Error loading data: ' + error.message;
+  });
 }
+
+function addToList(listType, movieId, data) {
+  if (!currentUser) return;
+
+  db.collection('users').doc(currentUser.uid)
+    .collection(listType)
+    .doc(movieId)
+    .set(data)
+    .then(() => loadMovies())
+    .catch(err => alert('Failed to add to ' + listType + ': ' + err.message));
+}
+
+function removeFromList(listType, movieId) {
+  if (!currentUser) return;
+
+  db.collection('users').doc(currentUser.uid)
+    .collection(listType)
+    .doc(movieId)
+    .delete()
+    .then(() => loadMovies())
+    .catch(err => alert('Failed to remove from ' + listType + ': ' + err.message));
+}
+
+function addWatchButtons(li, docId, listType) {
+  const btn = document.createElement('button');
+  btn.textContent = '❌ Remove';
+  btn.onclick = () => removeFromList(listType, docId);
+  const container = document.createElement('span');
+  container.className = 'movie-buttons';
+  container.appendChild(btn);
+  li.appendChild(container);
+}
+
 
 addMovieBtn.addEventListener('click', () => {
   const title = movieTitleInput.value.trim();
