@@ -1,330 +1,84 @@
-/* Reset some defaults */
-* {
-  box-sizing: border-box;
-}
-
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f0f2f5;
-  color: #333;
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
   margin: 0;
   padding: 20px;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
 }
 
-#auth-container, #app {
+.container {
+  max-width: 600px;
+  margin: auto;
   background: white;
-  padding: 30px 40px;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  width: 500px; /* updated size */
-  max-width: 95vw;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-
-h2, h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-weight: 600;
-  color: #222;
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-input[type="email"],
-input[type="password"],
-input[type="text"],
-select {
-  width: 100%;
-  padding: 10px 12px;
-  margin: 10px 0 20px;
-  border: 1.8px solid #ccc;
-  border-radius: 6px;
-  font-size: 16px;
-  transition: border-color 0.3s ease;
+form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="text"]:focus,
-select:focus {
-  border-color: #0052cc;
-  outline: none;
+input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
 button {
-  background-color: #0052cc;
-  border: none;
-  padding: 12px 20px;
+  padding: 10px 15px;
+  background: #4caf50;
   color: white;
-  font-weight: 600;
-  font-size: 15px;
-  border-radius: 6px;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
-  margin-right: 10px;
-  transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #003d99;
+  background: #45a049;
 }
 
-button:disabled {
-  background-color: #a3a3a3;
-  cursor: not-allowed;
+.lists {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
 }
 
-#error-msg,
-#movie-error-msg {
-  color: #d93025;
-  min-height: 18px;
-  margin-top: -10px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  font-weight: 500;
+.list-section {
+  flex: 1;
 }
 
-#movies-list {
-  list-style-type: none;
+.movie-list {
+  list-style: none;
   padding: 0;
-  max-height: 300px;
-  overflow-y: auto;
-  border-top: 1px solid #eee;
-  margin-top: 20px;
 }
 
-#movies-list li {
-  padding: 10px 8px;
-  border-bottom: 1px solid #eee;
+.movie-list li {
+  background: #eee;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 15px;
-  color: #222;
 }
 
-.movie-buttons button {
-  background-color: #e0e0e0;
-  color: #555;
-  padding: 6px 10px;
-  margin-left: 5px;
-  font-size: 13px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.movie-buttons button:hover {
-  background-color: #bbb;
-}
-
-#admin-controls {
-  margin-top: 25px;
-}
-
-#admin-controls input,
-#admin-controls select {
-  margin-bottom: 10px;
-}
-
-@media (max-width: 400px) {
-  body {
-    padding: 10px;
-  }
-  #auth-container, #app {
-    width: 100%;
-    padding: 20px;
-  }
-}
-
-/* Dark mode styles */
-body.dark-mode {
-  background: #121212;
-  color: #e0e0e0;
-}
-
-body.dark-mode #auth-container,
-body.dark-mode #app {
-  background: #1e1e1e;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.7);
-}
-
-body.dark-mode input,
-body.dark-mode select {
-  background: #333;
-  border-color: #555;
-  color: #ddd;
-}
-
-body.dark-mode input::placeholder {
-  color: #bbb;
-}
-
-body.dark-mode button {
-  background-color: #3399ff;
-  color: #eee;
-}
-
-body.dark-mode button:hover {
-  background-color: #2a80d1;
-}
-
-body.dark-mode .movie-buttons button {
-  background-color: #555;
-  color: #eee;
-}
-
-body.dark-mode .movie-buttons button:hover {
-  background-color: #777;
-}
-
-/* Mode toggle button */
-#mode-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 8px 14px;
+.movie-list li button {
+  background: #2196f3;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background-color: #0052cc;
+  padding: 5px 10px;
   color: white;
-  font-weight: 600;
-  z-index: 1000;
-  transition: background-color 0.3s ease;
-}
-
-#mode-toggle:hover {
-  background-color: #003d99;
-}
-
-body.dark-mode #mode-toggle {
-  background-color: #222;
-  color: #eee;
-}
-
-/* Dark mode text color fixes */
-
-body.dark-mode {
-  background-color: #121212;
-  color: #e0e0e0 !important;
-}
-
-body.dark-mode h2,
-body.dark-mode h3,
-body.dark-mode p,
-body.dark-mode label {
-  color: #e0e0e0;
-  border-bottom: 1px solid #444; /* keep for headings */
-}
-body.dark-mode li {
-  border-bottom: none !important;
-}
-body.dark-mode span,
-body.dark-mode input,
-body.dark-mode select,
-body.dark-mode button {
-  color: #e0e0e0 !important;
-}
-
-/* Inputs and selects dark background + text */
-body.dark-mode input,
-body.dark-mode select {
-  background-color: #222 !important;
-  color: #eee !important;
-  border-color: #555 !important;
-}
-
-/* Buttons background and text */
-body.dark-mode button {
-  background-color: #3399ff !important;
-  color: #eee !important;
-}
-
-/* Buttons hover state */
-body.dark-mode button:hover {
-  background-color: #2a80d1 !important;
-}
-
-.google-btn {
-  background: white;
-  border: 1.5px solid #ccc;
-  border-radius: 4px;
-  width: 38px;
-  height: 38px;
-  padding: 6px;
+  border-radius: 5px;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.google-btn:hover {
-  background-color: #eee;
-  border-color: #999;
-}
-
-.google-btn svg {
-  display: block;
-}
-
-.button-group {
-  display: flex;
-  gap: 6px; /* smaller gap */
-  justify-content: flex-start; /* align to the left */
-  flex-wrap: wrap; /* allows wrapping on smaller screens */
-  align-items: center;
-  margin-top: 15px;
-}
-
-#watchlist,
-#watched {
-  list-style-type: none;
-  padding: 0;
-  max-height: 300px;
-  overflow-y: auto;
-  border-top: 1px solid #eee;
-  margin-top: 20px;
-}
-
-#watchlist li,
-#watched li {
-  padding: 10px 8px;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 15px;
-  color: #222;
-}
-
-#user-movies h3 {
-  margin-top: 30px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 5px;
-}
-
-#movies-list li,
-#watchlist li,
-#watched li {
-  color: #222;
-}
-
-body.dark-mode #movies-list li,
-body.dark-mode #watchlist li,
-body.dark-mode #watched li {
-  color: #e0e0e0; /* light color for visibility */
-}
-
-/* Footer */
-footer {
-  margin-top: 40px;
-  text-align: center;
-  font-size: 13px;
-  color: #444343;
-}
-
-body.dark-mode footer {
-  color: #444343;
+.movie-list li button:hover {
+  background: #1976d2;
 }
