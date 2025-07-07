@@ -3,17 +3,14 @@ const input = document.getElementById('movie-input');
 const watchlistEl = document.getElementById('watchlist');
 const watchedEl = document.getElementById('watched');
 
-// Local storage state
 let watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 let watched = JSON.parse(localStorage.getItem('watched')) || [];
 
-// Save to local storage
 function saveLists() {
   localStorage.setItem('watchlist', JSON.stringify(watchlist));
   localStorage.setItem('watched', JSON.stringify(watched));
 }
 
-// Add new movie/show
 form.addEventListener('submit', function (e) {
   e.preventDefault();
   const title = input.value.trim();
@@ -25,7 +22,6 @@ form.addEventListener('submit', function (e) {
   }
 });
 
-// Move from watchlist to watched
 function markAsWatched(title) {
   watchlist = watchlist.filter(item => item !== title);
   watched.push(title);
@@ -33,7 +29,18 @@ function markAsWatched(title) {
   saveLists();
 }
 
-// Render lists
+function deleteFromWatchlist(title) {
+  watchlist = watchlist.filter(item => item !== title);
+  renderLists();
+  saveLists();
+}
+
+function deleteFromWatched(title) {
+  watched = watched.filter(item => item !== title);
+  renderLists();
+  saveLists();
+}
+
 function renderLists() {
   watchlistEl.innerHTML = '';
   watchedEl.innerHTML = '';
@@ -41,19 +48,33 @@ function renderLists() {
   watchlist.forEach(title => {
     const li = document.createElement('li');
     li.textContent = title;
-    const btn = document.createElement('button');
-    btn.textContent = 'Watched';
-    btn.onclick = () => markAsWatched(title);
-    li.appendChild(btn);
+
+    const btnWatched = document.createElement('button');
+    btnWatched.textContent = 'Watched';
+    btnWatched.onclick = () => markAsWatched(title);
+
+    const btnDelete = document.createElement('button');
+    btnDelete.textContent = 'Delete';
+    btnDelete.classList.add('delete-btn');
+    btnDelete.onclick = () => deleteFromWatchlist(title);
+
+    li.appendChild(btnWatched);
+    li.appendChild(btnDelete);
     watchlistEl.appendChild(li);
   });
 
   watched.forEach(title => {
     const li = document.createElement('li');
     li.textContent = title;
+
+    const btnDelete = document.createElement('button');
+    btnDelete.textContent = 'Delete';
+    btnDelete.classList.add('delete-btn');
+    btnDelete.onclick = () => deleteFromWatched(title);
+
+    li.appendChild(btnDelete);
     watchedEl.appendChild(li);
   });
 }
 
-// Initialize
 renderLists();

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="refresh" content="120"> <!-- Refresh every 2 minutes -->
   <title>Seen It</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -11,16 +12,16 @@
     <h1>🎬 Seen It</h1>
     <form id="movie-form">
       <input type="text" id="movie-input" placeholder="Enter movie or TV show name..." required />
-      <button type="submit">Add to Watchlist</button>
+      <button type="submit">Add</button>
     </form>
 
     <div class="lists">
       <div class="list-section">
-        <h2>Watchlist</h2>
+        <h2>📺 Watchlist</h2>
         <ul id="watchlist" class="movie-list"></ul>
       </div>
       <div class="list-section">
-        <h2>Watched</h2>
+        <h2>✅ Watched</h2>
         <ul id="watched" class="movie-list"></ul>
       </div>
     </div>
