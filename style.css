@@ -117,3 +117,56 @@ button:hover {
 .movie-list li button.delete-btn:hover {
   background-color: #b71c1c;
 }
+
+/* Dark mode toggle button */
+.mode-toggle {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 8px 12px;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 1000;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+.mode-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Dark mode styles */
+body.dark {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+body.dark .container {
+  background-color: #1e1e1e;
+}
+
+body.dark input,
+body.dark button {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+body.dark .movie-list li {
+  background: #2a2a2a;
+}
+
+body.dark .movie-list li button {
+  background-color: #b71c1c;
+}
+
+body.dark .movie-list li button:hover {
+  background-color: #666;
+}
+
+/* Smooth transition for background and color changes */
+body, .container, input, button, .movie-list li {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}

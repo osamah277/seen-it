@@ -2,9 +2,23 @@ const form = document.getElementById('movie-form');
 const input = document.getElementById('movie-input');
 const watchlistEl = document.getElementById('watchlist');
 const watchedEl = document.getElementById('watched');
+const modeToggle = document.getElementById('mode-toggle');
 
 let watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 let watched = JSON.parse(localStorage.getItem('watched')) || [];
+
+// Load saved mode
+if (localStorage.getItem('mode') === 'dark') {
+  document.body.classList.add('dark');
+  modeToggle.textContent = '☀️';
+}
+
+modeToggle.addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  localStorage.setItem('mode', isDark ? 'dark' : 'light');
+  modeToggle.textContent = isDark ? '☀️' : '🌙';
+});
 
 function saveLists() {
   localStorage.setItem('watchlist', JSON.stringify(watchlist));
@@ -29,12 +43,6 @@ function markAsWatched(title) {
   saveLists();
 }
 
-function deleteFromWatchlist(title) {
-  watchlist = watchlist.filter(item => item !== title);
-  renderLists();
-  saveLists();
-}
-
 function deleteFromWatched(title) {
   watched = watched.filter(item => item !== title);
   renderLists();
@@ -45,6 +53,7 @@ function renderLists() {
   watchlistEl.innerHTML = '';
   watchedEl.innerHTML = '';
 
+  // Watchlist: Only "Watched" button
   watchlist.forEach(title => {
     const li = document.createElement('li');
     li.textContent = title;
@@ -53,16 +62,11 @@ function renderLists() {
     btnWatched.textContent = 'Watched';
     btnWatched.onclick = () => markAsWatched(title);
 
-    const btnDelete = document.createElement('button');
-    btnDelete.textContent = 'Delete';
-    btnDelete.classList.add('delete-btn');
-    btnDelete.onclick = () => deleteFromWatchlist(title);
-
     li.appendChild(btnWatched);
-    li.appendChild(btnDelete);
     watchlistEl.appendChild(li);
   });
 
+  // Watched: Only "Delete" button
   watched.forEach(title => {
     const li = document.createElement('li');
     li.textContent = title;
