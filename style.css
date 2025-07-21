@@ -8,23 +8,50 @@ body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
   background: #f0f2f5;
   padding: 20px;
-}
-
-.container {
   max-width: 700px;
   margin: auto;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Topbar */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 16px;
   background: #fff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-h1 {
-  text-align: center;
+  border-radius: 8px;
   margin-bottom: 20px;
-  font-size: 1.8em;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease;
 }
 
+body.dark .topbar {
+  background: #1e1e1e;
+}
+
+.site-title {
+  flex: 1;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: inherit;
+  padding: 6px 10px;
+  transition: transform 0.2s ease;
+}
+
+.icon-button:active {
+  transform: scale(0.95);
+}
+
+/* Form */
 form {
   display: flex;
   flex-direction: column;
@@ -32,14 +59,18 @@ form {
   margin-bottom: 20px;
 }
 
+input[type="email"],
+input[type="password"],
 input[type="text"] {
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1em;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-button {
+button[type="submit"],
+#add-movie-form button {
   padding: 12px;
   font-size: 1em;
   border: none;
@@ -47,12 +78,15 @@ button {
   color: white;
   border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
+button[type="submit"]:hover,
+#add-movie-form button:hover {
   background-color: #43a047;
 }
 
+/* Lists */
 .lists {
   display: flex;
   flex-direction: column;
@@ -77,6 +111,7 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: background-color 0.3s ease;
 }
 
 .movie-list li button {
@@ -87,13 +122,154 @@ button:hover {
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.9em;
+  margin-left: 5px;
+  transition: background-color 0.3s ease;
 }
 
 .movie-list li button:hover {
   background-color: #1976d2;
 }
 
-/* Responsive styles */
+.movie-list li button.delete-btn {
+  background-color: #e53935;
+}
+
+.movie-list li button.delete-btn:hover {
+  background-color: #b71c1c;
+}
+
+/* Add Movie Form */
+#add-movie-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+#add-movie-form input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+}
+
+#add-movie-form button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+#add-movie-form button:hover {
+  background-color: #43a047;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100vh;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 1001;
+}
+
+.sidebar.show {
+  transform: translateX(0);
+}
+
+.sidebar-content .nav-link {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+#logout-btn {
+  background-color: #e53935;
+  color: white;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#logout-btn:hover {
+  background-color: #b71c1c;
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0,0,0,0.4);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.overlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Hidden Utility */
+.hidden {
+  display: none;
+}
+
+/* Dark Mode */
+body.dark {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+body.dark input,
+body.dark button {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+body.dark .movie-list li {
+  background: #333;
+}
+
+body.dark .movie-list li button {
+  background-color: #1976d2;
+}
+
+body.dark .movie-list li button:hover {
+  background-color: #666;
+}
+
+body.dark .sidebar {
+  background-color: #1e1e1e;
+}
+
+body.dark .sidebar-content .nav-link {
+  color: #e0e0e0;
+}
+
+/* Responsive */
 @media (min-width: 600px) {
   form {
     flex-direction: row;
@@ -109,64 +285,10 @@ button:hover {
   }
 }
 
-.movie-list li button.delete-btn {
-  background-color: #e53935;
-  margin-left: 8px;
+.app-page {
+  display: none;
 }
 
-.movie-list li button.delete-btn:hover {
-  background-color: #b71c1c;
-}
-
-/* Dark mode toggle button */
-.mode-toggle {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  padding: 8px 12px;
-  background: #333;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  z-index: 1000;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-}
-
-.mode-toggle:active {
-  transform: scale(0.95);
-}
-
-/* Dark mode styles */
-body.dark {
-  background-color: #121212;
-  color: #e0e0e0;
-}
-
-body.dark .container {
-  background-color: #1e1e1e;
-}
-
-body.dark input,
-body.dark button {
-  background-color: #333;
-  color: #fff;
-  border: 1px solid #555;
-}
-
-body.dark .movie-list li {
-  background: #2a2a2a;
-}
-
-body.dark .movie-list li button {
-  background-color: #b71c1c;
-}
-
-body.dark .movie-list li button:hover {
-  background-color: #666;
-}
-
-/* Smooth transition for background and color changes */
-body, .container, input, button, .movie-list li {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+.app-page:not(.hidden) {
+  display: block;
 }

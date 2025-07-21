@@ -3,31 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta http-equiv="refresh" content="120"> <!-- Refresh every 2 minutes -->
   <title>Seen It</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <button id="mode-toggle" class="mode-toggle">🌙 Dark Mode</button>
-  <div class="container">
-    <h1>🎬 Seen It</h1>
-    <form id="movie-form">
-      <input type="text" id="movie-input" placeholder="Enter movie or TV show name..." required />
-      <button type="submit">Add</button>
-    </form>
+  <!-- Sidebar -->
+  <nav id="sidebar" class="sidebar hidden">
+    <div class="sidebar-content">
+      <a href="#" class="nav-link" data-page="home">🏠 Home</a>
+      <a href="#" class="nav-link" data-page="watchlist">📺 Watchlist</a>
+      <a href="#" class="nav-link" data-page="watched">✅ Watched</a>
+      <a href="#" class="nav-link hidden" data-page="admin" id="admin-link">🛠️ Admin Panel</a>
+    </div>
+    <button id="logout-btn">Log Out</button>
+  </nav>
 
-    <div class="lists">
-      <div class="list-section">
-        <h2>📺 Watchlist</h2>
-        <ul id="watchlist" class="movie-list"></ul>
-      </div>
-      <div class="list-section">
-        <h2>✅ Watched</h2>
-        <ul id="watched" class="movie-list"></ul>
-      </div>
+  <!-- Overlay -->
+  <div id="overlay" class="overlay hidden"></div>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <button id="hamburger" class="icon-button">☰</button>
+    <h1 class="site-title">🎬 Seen It</h1>
+    <button id="mode-toggle" class="icon-button">🌙</button>
+  </header>
+
+  <!-- Auth Container -->
+  <div id="auth-container">
+    <h2 id="auth-title">Login</h2>
+    <form id="auth-form">
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit" id="auth-submit-btn">Login</button>
+    </form>
+    <p id="toggle-auth">
+      Don't have an account? <a href="#" id="toggle-link">Register here</a>
+    </p>
+    <p id="auth-error" style="color: red;"></p>
+  </div>
+
+  <!-- App Content -->
+  <div id="app-content" style="display: none;">
+    <!-- Home -->
+    <div id="page-home" class="app-page">
+      <h2>Welcome to Seen It 👋</h2>
+      <p>Use the sidebar to view your Watchlist and Watched movies.</p>
+    </div>
+
+    <!-- Watchlist -->
+    <div id="page-watchlist" class="app-page hidden">
+      <h2>📺 Watchlist</h2>
+      <form id="add-movie-form" class="hidden">
+        <input type="text" id="new-movie" placeholder="Add movie or TV show..." required />
+        <button type="submit">➕ Add</button>
+      </form>
+      <ul id="watchlist" class="movie-list"></ul>
+    </div>
+
+    <!-- Watched -->
+    <div id="page-watched" class="app-page hidden">
+      <h2>✅ Watched</h2>
+      <ul id="watched" class="movie-list"></ul>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="page-admin" class="app-page hidden">
+      <h2>🛠️ Admin Control Panel</h2>
+      <p>Welcome, Admin! Manage settings and data here.</p>
     </div>
   </div>
 
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
