@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Seen It - Track Your Movies & Shows</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #eee;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-weight: 700;
+      color: #ff6f61;
+      text-align: center;
+    }
+    #auth, #app {
+      width: 100%;
+      max-width: 600px;
+      background: #222;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #000;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border-radius: 5px;
+      border: none;
+      font-size: 1em;
+      background: #333;
+      color: #eee;
+    }
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      background: #ff6f61;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 10px;
+      width: 100%;
+      font-size: 1em;
+    }
+    button:hover {
+      background: #e55a4f;
+    }
+    .movie-list {
+      background: #222;
+      border-radius: 8px;
+      padding: 10px 20px;
+      box-shadow: 0 0 10px #000;
+      margin-bottom: 30px;
+      min-height: 50px;
+    }
+    .movie-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid #333;
+    }
+    .movie-item:last-child {
+      border-bottom: none;
+    }
+    .movie-title {
+      font-weight: 600;
+      font-size: 1.1em;
+      max-width: 100%;
+      overflow-wrap: break-word;
+      margin-bottom: 6px;
+    }
+    select {
+      background: #333;
+      border: none;
+      color: #eee;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      width: 150px;
+    }
+    select:focus {
+      outline: 2px solid #ff6f61;
+    }
+    #signOutBtn {
+      margin-top: 10px;
+      background: #444;
+      width: auto;
+      padding: 8px 15px;
+    }
+    .error {
+      background: #b33;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      color: #fff;
+      font-weight: 700;
+      text-align: center;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #666;
+      max-width: 600px;
+      text-align: center;
+    }
+    #auth h2 {
+      margin-bottom: 15px;
+      text-align: center;
+      color: #ff6f61;
+    }
+    #auth button.google {
+      background: #4285F4;
+      margin-top: 5px;
+    }
+    #auth button.google:hover {
+      background: #357ae8;
+    }
+    #toggleAuthMode {
+      background: transparent;
+      color: #ff6f61;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+      text-decoration: underline;
+      font-size: 0.9em;
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+    h3 {
+      margin-bottom: 8px;
+      color: #ff6f61;
+      border-bottom: 1px solid #ff6f61;
+      padding-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Seen It - Track Your Movies & TV Shows</h1>
+
+  <div id="auth">
+    <h2 id="authTitle">Sign In</h2>
+    <div id="errorMsg" class="error" style="display:none;"></div>
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button id="authBtn">Sign In</button>
+    <button id="googleSignInBtn" class="google">Sign In with Google</button>
+    <button id="toggleAuthMode">Don't have an account? Register</button>
+  </div>
+
+  <div id="app" style="display:none;">
+    <div>
+      <strong>Welcome, <span id="userEmail"></span>!</strong>
+      <button id="signOutBtn">Sign Out</button>
+    </div>
+
+    <h3>New - Movies & TV Shows</h3>
+    <div class="movie-list" id="newList"></div>
+
+    <h3>Watchlist - Movies & TV Shows</h3>
+    <div class="movie-list" id="watchingList"></div>
+
+    <h3>Watched List - Movies & TV Shows</h3>
+    <div class="movie-list" id="watchedList"></div>
+  </div>
+
+  <footer>
+    Data saved in your Firebase account. Refresh or use another device to keep progress.
+  </footer>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Replace with your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyChgVIPxsSrmsKo8cL2gpMMf9bUioLKgd4",
+      authDomain: "seen-it-d5731.firebaseapp.com",
+      projectId: "seen-it-d5731",
+      storageBucket: "seen-it-d5731.firebasestorage.app",
+      messagingSenderId: "539164904581",
+      appId: "1:539164904581:web:b17edd8d48c333be61edec",
+      measurementId: "G-YEJBLCXM0G"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const statuses = [
+      { value: 'watching', label: 'Watching' },
+      { value: 'watched', label: 'Watched' }
+    ];
+
+    // UI Elements
+    const authDiv = document.getElementById('auth');
+    const appDiv = document.getElementById('app');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const authBtn = document.getElementById('authBtn');
+    const googleSignInBtn = document.getElementById('googleSignInBtn');
+    const toggleAuthModeBtn = document.getElementById('toggleAuthMode');
+    const authTitle = document.getElementById('authTitle');
+    const errorMsg = document.getElementById('errorMsg');
+    const userEmailSpan = document.getElementById('userEmail');
+    const signOutBtn = document.getElementById('signOutBtn');
+
+    let isRegisterMode = false;
+
+    toggleAuthModeBtn.onclick = () => {
+      isRegisterMode = !isRegisterMode;
+      authTitle.textContent = isRegisterMode ? 'Register' : 'Sign In';
+      authBtn.textContent = isRegisterMode ? 'Register' : 'Sign In';
+      toggleAuthModeBtn.textContent = isRegisterMode
+        ? 'Already have an account? Sign In'
+        : "Don't have an account? Register";
+      errorMsg.style.display = 'none';
+    };
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.style.display = 'block';
+    }
+
+    function clearError() {
+      errorMsg.style.display = 'none';
+      errorMsg.textContent = '';
+    }
+
+    authBtn.onclick = async () => {
+      clearError();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      if (!email || !password) {
+        showError('Please enter email and password.');
+        return;
+      }
+
+      try {
+        if (isRegisterMode) {
+          await auth.createUserWithEmailAndPassword(email, password);
+        } else {
+          await auth.signInWithEmailAndPassword(email, password);
+        }
+      } catch (err) {
+        showError(err.message);
+      }
+    };
+
+    googleSignInBtn.onclick = async () => {
+      clearError();
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try {
+        await auth.signInWithPopup(provider);
+      } catch (err) {
+        showError(err.message);
+      }
+    };
+
+    signOutBtn.onclick = () => {
+      auth.signOut();
+    };
+
+    async function saveProgress(userId, progress) {
+      try {
+        await db.collection('users').doc(userId).set({ progress }, { merge: true });
+      } catch (err) {
+        console.error('Error saving progress:', err);
+      }
+    }
+
+    async function loadProgress(userId) {
+      try {
+        const doc = await db.collection('users').doc(userId).get();
+        if (doc.exists) {
+          return doc.data().progress || {};
+        }
+      } catch (err) {
+        console.error('Error loading progress:', err);
+      }
+      return {};
+    }
+
+    async function loadMovies() {
+      try {
+        const snapshot = await db.collection('movies').get();
+        const movieList = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          movieList.push({
+            id: doc.id,
+            title: data.title,
+            type: data.type || 'movie'
+          });
+        });
+        return movieList;
+      } catch (err) {
+        console.error('Error loading movies from Firestore:', err);
+        return [];
+      }
+    }
+
+    async function renderLists(user) {
+      const progress = await loadProgress(user.uid);
+      const movies = await loadMovies();
+
+      const newMovies = [];
+      const watchingMovies = [];
+      const watchedMovies = [];
+
+      movies.forEach(movie => {
+        const status = progress[movie.id];
+        if (!status) {
+          newMovies.push(movie);
+        } else if (status === 'watching') {
+          watchingMovies.push(movie);
+        } else if (status === 'watched') {
+          watchedMovies.push(movie);
+        }
+      });
+
+      function renderMovieList(container, movieArray) {
+        container.innerHTML = '';
+
+        if (movieArray.length === 0) {
+          const emptyMsg = document.createElement('p');
+          emptyMsg.style.textAlign = 'center';
+          emptyMsg.style.color = '#999';
+          emptyMsg.style.marginTop = '10px';
+          emptyMsg.textContent = 'No movies here.';
+          container.appendChild(emptyMsg);
+          return;
+        }
+
+        movieArray.forEach(movie => {
+          const movieDiv = document.createElement('div');
+          movieDiv.className = 'movie-item';
+
+          const titleDiv = document.createElement('div');
+          titleDiv.className = 'movie-title';
+          titleDiv.textContent = movie.title;
+
+          const select = document.createElement('select');
+          select.setAttribute('aria-label', `Status for ${movie.title}`);
+          select.dataset.id = movie.id;
+
+          const optionNone = document.createElement('option');
+          optionNone.value = '';
+          optionNone.textContent = 'Not Tracking';
+          select.appendChild(optionNone);
+
+          statuses.forEach(status => {
+            const option = document.createElement('option');
+            option.value = status.value;
+            option.textContent = status.label;
+            select.appendChild(option);
+          });
+
+          select.value = progress[movie.id] || '';
+
+          select.addEventListener('change', async (e) => {
+            const newStatus = e.target.value;
+            if (newStatus === '') {
+              delete progress[movie.id];
+            } else {
+              progress[movie.id] = newStatus;
+            }
+            await saveProgress(user.uid, progress);
+            renderLists(user);
+          });
+
+          movieDiv.appendChild(titleDiv);
+          movieDiv.appendChild(select);
+          container.appendChild(movieDiv);
+        });
+      }
+
+      renderMovieList(document.getElementById('newList'), newMovies);
+      renderMovieList(document.getElementById('watchingList'), watchingMovies);
+      renderMovieList(document.getElementById('watchedList'), watchedMovies);
+    }
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        authDiv.style.display = 'none';
+        appDiv.style.display = 'block';
+        userEmailSpan.textContent = user.email || 'User';
+        renderLists(user);
+      } else {
+        authDiv.style.display = 'block';
+        appDiv.style.display = 'none';
+        emailInput.value = '';
+        passwordInput.value = '';
+        clearError();
+      }
+    });
+  </script>
+</body>
+</html>
